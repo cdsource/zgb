@@ -410,17 +410,12 @@ public class ImproveGoods {
                 AiFileUtil.delFile(tbiImg);
                 continue;
             }
-            // String srcImg = tbiImg.substring(0, tbiImg.length() - 4) + ".jpg";
-            // AiFileUtil.copyFile(srcImg, tbiImg);
-            // ImageUtils.cutImage(tbiImg);
+
             cImageUtils.resize(tbiImg, 500, 0.9f);
             if (RunParam.b_WaterPic ) {
                 cImageUtils.generateWaterFile(tbiImg, "D:\\zgb\\begin.jpg");
             }
-            /*
-             * if (i % 100 == 0) { logger.info(i + "/" + v_tbi.size());
-             * TextAreaLogAppender.log("已经处理主图数量" + i + "/" + v_tbi.size()); }
-             */
+
 
         }
 

@@ -469,68 +469,7 @@ public class ImageUtils {
     public  void resize(String originalFileName,  
             int newWidth, float quality) throws IOException {  
   
-        if (quality > 1) {  
-            throw new IllegalArgumentException(  
-                    "Quality has to be between 0 and 1");  
-        }  
-        File originalFile =new File(originalFileName);
-        ImageIcon ii = new ImageIcon(originalFile.getCanonicalPath());  
-        Image i = ii.getImage();  
-        Image resizedImage = null;  
-  
-        int iWidth = i.getWidth(null);  
-        int iHeight = i.getHeight(null);  
-
-        resizedImage = i.getScaledInstance(newWidth, (newWidth * iHeight)  
-                / iWidth, Image.SCALE_SMOOTH);
-        
-        i.flush();
-        // This code ensures that all the pixels in the image are loaded.  
-        Image temp = new ImageIcon(resizedImage).getImage();  
-        resizedImage.flush();
-        // Create the buffered image.  
-        BufferedImage bufferedImage = new BufferedImage(temp.getWidth(null),  
-                temp.getHeight(null), BufferedImage.TYPE_INT_RGB);  
-         // Copy image to buffered image.  
-        Graphics g = bufferedImage.createGraphics();  
-        
-        // Clear background and paint the image.  
-        g.setColor(Color.white);  
-        g.fillRect(0, 0, temp.getWidth(null), temp.getHeight(null));  
-        g.drawImage(temp, 0, 0, null);  
-        temp.flush();
-        g.dispose();  
-        
-        // Soften.  
-        float softenFactor = 0.05f;  
-        float[] softenArray = { 0, softenFactor, 0, softenFactor,  
-                1 - (softenFactor * 4), softenFactor, 0, softenFactor, 0 };  
-        Kernel kernel = new Kernel(3, 3, softenArray);  
-        ConvolveOp cOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);  
-        bufferedImage = cOp.filter(bufferedImage, null);  
-  
-        // Write the jpeg to a file.  
-        FileOutputStream out=null;
-        try {
-            out = new FileOutputStream(new File(originalFileName));  
-            
-            // Encodes image as a JPEG data stream  
-            JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);  
-      
-            JPEGEncodeParam param = encoder  
-                    .getDefaultJPEGEncodeParam(bufferedImage);  
-      
-            param.setQuality(quality, true);  
-      
-            encoder.setJPEGEncodeParam(param);  
-            encoder.encode(bufferedImage); 
-            out.flush();
-        } finally {
-            // TODO: handle finally clause
-            out.close();
-        }
- 
-        
-       
+        NarrowImage narrowImage = new NarrowImage();  
+        narrowImage.writeHighQuality(narrowImage.zoomImage(originalFileName), originalFileName);
     }
 }
